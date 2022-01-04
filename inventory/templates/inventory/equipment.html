@@ -1,0 +1,250 @@
+{% extends 'app.html' %}
+{% load static %}
+
+{% block content %}
+
+<div id="inventoryApp">
+    <h1 class="mt-4">Təchizat</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">Təchizat</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+        
+       
+        <div v-if="error" class="my-3 delete-error-alert alert alert-danger alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <span v-html="errorMessage"></span>
+            <button type="button" @clicked="clearMessages" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        <div v-if="success" class="my-3 delete-success-alert alert alert-success alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>            
+            <span v-html="successMessage"></span>
+            <button type="button" @clicked="clearMessages" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        
+        <div class="card card-body my-4">
+            <h2>Təchizat əlavə et</h2>
+            <form @submit.prevent="createEquipment">
+                <div class="mb-3 row">
+                    <div class="col-sm-4">
+                        <label for="name" class="form-label">Ad</label>
+                        <input type="text" name="name" id="name" v-model="item.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                        <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="quantity" class="form-label">Sayı</label>
+                        <input type="number" name="quantity" id="quantity" min="0" v-model="item.quantity" :class="{'is-invalid':validationErrors.quantity}" class="form-control" placeholder="Sayı">
+                        <li v-if="validationErrors && validationErrors.quantity" class="invalid-feedback" v-for="error in validationErrors.quantity" v-html="error"></li>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="price" class="form-label">Qiyməti</label>
+                        <input type="number" name="price" id="price" min="0" step="0.01" v-model="item.price" :class="{'is-invalid':validationErrors.price}" class="form-control" placeholder="Qiyməti">
+                        <li v-if="validationErrors && validationErrors.price" class="invalid-feedback" v-for="error in validationErrors.price" v-html="error"></li>
+                    </div>
+                </div>
+  
+                <button class="btn btn-success" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+            </form>
+        </div>
+
+
+        <div class="list my-3">
+            <h3>Təchizatın siyahısı</h3>
+
+            <form @submit.prevent="filtering" class="my-3">
+                <div class="row">
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Axtar" v-model="searchQuery">
+                            <button class="btn btn-outline-secondary" type="submit">Axtar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+    
+            <div class="table-responsive rounded my-4">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-success text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">
+                                <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                                    <span>Ad</span>
+                                    <div class="d-flex flex-column">
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':orderDirection}"><i class="fas fa-chevron-up"></i></span> 
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':!orderDirection}"><i class="fas fa-chevron-down"></i></span>
+                                    </div>
+                                </span>
+                            </th>
+                            <th scope="col">Sayı</th>
+                            <th scope="col">Qiyməti</th>
+                            <th scope="col">Ümumi qiyməti</th>
+                            <th scope="col">Əlavə məlumat</th>
+                            <th scope="col">Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <template v-if="loading">
+                        <tbody>
+                            <tr>
+                                <td colspan="7">
+                                    <div style="width: 100%; height: 15rem;" class="row justify-content-center align-items-center">
+                                        <div class="spinner-grow text-success" style="width: 3rem; height: 3rem;" role="status">
+                                            <span class="visually-hidden" >Loading...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                    
+                    <tbody v-if="equipment && equipmentCount>0">
+                        <tr class="equipment_item" v-for="(item, index) in equipment" :key="index">
+                            <th scope="row" v-html="(index+1)+((currentPageNum-1)*perPage)"></th>
+                            <td class="item_name" v-html="item.name"></td>
+                            <td class="item_quantity" v-html="item.quantity"></td>
+                            <td class="item_price" v-html="item.price"></td>
+                            <td v-html="item.total_price"></td>
+                            <td v-html="$options.filters.truncateStr(item.note)"></td>
+                            <td>
+                                <button @click="selectEquipment(item)" type="button" class="btn btn-primary equipmentEditBtn" data-bs-toggle="modal" data-bs-target="#equipmentEditModal">
+                                    Dəyişiklik et <i class="fas fa-edit"></i>
+                                </button> 
+                                <button @click="selectEquipment(item)" type="button" class="btn btn-danger equipmentDeleteBtn" data-bs-toggle="modal" data-bs-target="#equipmentDeleteModal">
+                                    Delete <i class="fas fa-trash-alt"></i>
+                                </button>   
+                            </td>
+                        </tr>
+                    </tbody>
+    
+                
+                    <tfoot class="bg-success text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">
+                                <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                                    <span>Ad</span>
+                                    <div class="d-flex flex-column">
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':orderDirection}"><i class="fas fa-chevron-up"></i></span> 
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':!orderDirection}"><i class="fas fa-chevron-down"></i></span>
+                                    </div>
+                                </span>
+                            </th>
+                            <th scope="col">Sayı</th>
+                            <th scope="col">Qiyməti</th>
+                            <th scope="col">Ümumi qiyməti</th>
+                            <th scope="col">Əlavə məlumat</th>
+                            <th scope="col">Əməliyyatlar</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+    
+            <nav v-if="equipment && equipmentCount>equipment.length">
+                <ul class="pagination justify-content-center">
+                    <template v-if="prevPage">
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getEquipment(firstPage)">İlk</button>
+                        </li>
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getEquipment(prevPage)"><i class="fas fa-angle-double-left"></i></button>
+                        </li>
+                    </template>
+    
+                    <li class="page-item mx-1" v-for="i in totalPages">
+                        <button v-if="i===currentPageNum" class="btn" :class="{'btn-primary':i==currentPageNum, 'btn-outline-primary':i!=currentPageNum}" @click="getEquipment(currentPage)" v-html="currentPageNum"></button>
+                        <button v-else-if="i > currentPageNum-3 && i < currentPageNum+3" class="btn" :class="{'btn-primary':i==currentPageNum, 'btn-outline-primary':i!=currentPageNum}" @click="getEquipment(currentPage.replace('page='+currentPageNum, 'page='+i))" v-html="i"></button>
+                    </li>
+                    
+                    <template v-if="nextPage">
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getEquipment(nextPage)"><i class="fas fa-angle-double-right"></i></button>
+                        </li></a>
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getEquipment(lastPage)">Sonuncu</button>
+                        </li>
+                    </template>
+                </ul>
+            </nav>
+    
+        </div>
+
+        
+
+
+        <div class="modal fade" id="equipmentEditModal" tabindex="-1" aria-labelledby="equipmentEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="equipmentEditModalLabel">Təchizat məlumatlarının yenilənməsi</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="equipmentEditForm" @submit.prevent="editEquipment()" v-if="selectedItem">
+                      <div class="mb-3">
+                        <label for="item_name" class="form-label">Ad</label>
+                        <input type="text" name="item_name" id="item_name" v-model="selectedItem.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                        <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
+                      </div>
+                      <div class="mb-3 row">
+                        <div class="col-sm-6">
+                            <label for="item_quantity" class="form-label">Sayı</label>
+                            <input type="number" name="item_quantity" id="item_quantity" v-model="selectedItem.quantity" :class="{'is-invalid':validationErrors.quantity}" class="form-control" placeholder="Sayı">
+                            <li v-if="validationErrors && validationErrors.quantity" class="invalid-feedback" v-for="error in validationErrors.quantity" v-html="error"></li>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="item_price" class="form-label">Qiyməti</label>
+                            <input type="number" name="item_price" id="item_price" step="0.01" v-model="selectedItem.price" :class="{'is-invalid':validationErrors.price}" class="form-control" placeholder="Qiyməti">
+                            <li v-if="validationErrors && validationErrors.price" class="invalid-feedback" v-for="error in validationErrors.price" v-html="error"></li>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="item_note" class="form-label">Əlavə məlumat</label>
+                        <textarea name="item_note" id="item_note" v-model="selectedItem.note" rows="7" :class="{'is-invalid':validationErrors.note}" class="form-control" placeholder="Əlavə məlumat"></textarea>
+                        <li v-if="validationErrors && validationErrors.note" class="invalid-feedback" v-for="error in validationErrors.note" v-html="error"></li>
+                      </div>
+
+                      <button class="btn btn-success" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="equipmentDeleteModal" tabindex="-1" aria-labelledby="equipmentDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="equipmentDeleteModalLabel">Təchizatı sil</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Təchizatı silmək istədiyinizə əminsinizmi?</p>
+                    <form id="equipmentDeleteForm" @submit.prevent="deleteEquipment()" v-if="selectedItem">
+                        <button type="submit" class="btn btn-danger" :disabled="loading"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/app/inventory.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-4">Əsas Səhifə</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Əsas Səhifə</li>
+</ol>
+
+<div class="container">
+    <div class="row justify-content-around">
+        <a href="{% url 'animals:list' %}" class="card card-body text-decoration-none text-center text-white bg-success bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-paw"></i>
+            </div>
+            <h5 class="card-title">Heyvanlar</h5>
+        </a>
+
+        <a href="{% url 'animals:doctors' %}" class="card card-body text-decoration-none text-center text-white bg-primary bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h5 class="card-title">Həkimlər</h5>
+        </a>
+
+        <a href="{% url 'animals:examinations' %}" class="card card-body text-decoration-none text-center text-white bg-info bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-notes-medical"></i>
+            </div>
+            <h5 class="card-title">Müayinələr</h5>
+        </a>
+
+        <a href="{% url 'animals:feeds' %}" class="card card-body text-decoration-none text-center text-white bg-danger bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-seedling"></i>
+            </div>
+            <h5 class="card-title">Heyvan Yemləri</h5>
+        </a>
+
+        <a href="{% url 'inventory:equipment' %}" class="card card-body text-decoration-none text-center text-white bg-warning bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-pump-medical"></i>
+            </div>
+            <h5 class="card-title">Təchizat</h5>
+        </a>
+
+        <a href="{% url 'medicines:list' %}" class="card card-body text-decoration-none text-center text-white bg-success bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-prescription-bottle-alt"></i>
+            </div>
+            <h5 class="card-title">Dərmanlar</h5>
+        </a>
+
+        <a href="{% url 'medicines:companies' %}" class="card card-body text-decoration-none text-center text-white bg-primary bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-clinic-medical"></i>
+            </div>
+            <h5 class="card-title">Dərman Şirkətləri</h5>
+        </a>
+
+        <a href="{% url 'accounts:list' %}" class="card card-body text-decoration-none text-center text-white bg-info bg-gradient mb-3" style="max-width:18rem">
+            <div class="feature-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h5 class="card-title">İşçilər</h5>
+        </a>
+
+          
+    </div>
+</div>
+  
+{% endblock %}

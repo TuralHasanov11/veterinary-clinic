@@ -1,0 +1,84 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-2">İşçi əlavə et</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'accounts:list' %}">İşçilər</a></li>
+    <li class="breadcrumb-item active">İşçi əlavə et</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+       <div class="container">
+        <div class="row g-5">
+            <div class="col-12 col-md-10">
+                
+                <form class="needs-validation" novalidate method="post">
+                    {% csrf_token %}
+                    {% include 'snippets/form_errors.html' with errors=form.non_field_errors %}
+        
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="id_first_name" class="form-label">Adı</label>
+                            {{ form.first_name }}
+                            <div class="text-danger">
+                                {{ form.first_name.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="id_last_name" class="form-label">Soyadı</label>
+                            {{ form.last_name }}
+                            <div class="text-danger">
+                                {{ form.last_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="id_username" class="form-label">İstifadəçi adı</label>
+                            {{ form.username }}
+                            <div class="text-danger">
+                                {{ form.username.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="form-check">
+                                <label for="id_is_admin" class="form-label">Adminlik</label>
+                                {{ form.is_admin }}
+                                <div class="text-danger">
+                                    {{ form.is_admin.errors }}
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="id_password1" class="form-label">Şifrə</label>
+                            {{ form.password1 }}
+                            <div class="text-danger">
+                                {{ form.password1.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <label for="id_password2" class="form-label">Şifrənin təsdiqi</label>
+                            {{ form.password2 }}
+                            <div class="text-danger">
+                                {{ form.password2.errors }}
+                            </div>
+                        </div>
+                    </div>
+                
+                    <button class="btn btn-success my-3" type="submit">Əlavə et</button>
+                  </form>
+        
+            </div>
+        </div>
+        
+       </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

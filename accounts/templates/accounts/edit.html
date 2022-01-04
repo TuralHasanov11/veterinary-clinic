@@ -1,0 +1,118 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1>Məlumatları yenilə</h1>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'accounts:list' %}">İşçilər</a></li>
+  <li class="breadcrumb-item active">İşçinin məlumatları yeniləyin</li>
+</ol>
+
+<h3>{{account.username}}</h3>
+
+<div class="card mb-4">
+  <div class="card-body">
+     <div class="container">
+      <div class="row g-5">
+          <div class="col-12 col-md-10">
+              
+              <form class="needs-validation" novalidate method="post">
+                  {% csrf_token %}
+                  {% include 'snippets/form_errors.html' with errors=form.non_field_errors %}
+      
+                  <div class="row g-3">
+                      <div class="col-12 col-sm-6 col-md-4">
+                          <label for="{{form.first_name.id_for_label}}" class="form-label">Adı</label>
+                          {{ form.first_name }}
+                          <div class="text-danger">
+                              {{ form.first_name.errors }}
+                          </div>
+                      </div>
+              
+                      <div class="col-12 col-sm-6 col-md-4">
+                          <label for="{{form.last_name.id_for_label}}" class="form-label">Soyadı</label>
+                          {{ form.last_name }}
+                          <div class="text-danger">
+                              {{ form.last_name.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-12 col-sm-6 col-md-4">
+                          <label for="{{form.username.id_for_label}}" class="form-label">İstifadəçi adı</label>
+                          {{ form.username }}
+                          <div class="text-danger">
+                              {{ form.username.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-12">
+                          <div class="form-check w-100 h-100">
+                              <label for="{{form.is_admin.id_for_label}}" class="form-label">Adminlik</label>
+                              <input id="{{form.is_admin.id_for_label}}" type="checkbox" name="{{ form.is_admin.name }}" class="form-check-input" value="true" {% if account.is_admin %}checked{%endif%}>
+                              <div class="text-danger">
+                                  {{ form.is_admin.errors }}
+                              </div>
+                          </div>
+                      </div>
+              
+                      <div class="col-12 col-sm-6 col-md-4">
+                          <label for="{{form.old_password.id_for_label}}" class="form-label">Köhnə şifrə</label>
+                          {{ form.old_password }}
+                          <div class="text-danger">
+                              {{ form.old_password.errors }}
+                          </div>
+                      </div>
+              
+                      <div class="col-12 col-sm-6 col-md-4">
+                          <label for="{{form.new_password1.id_for_label}}" class="form-label">Şifrənin təsdiqi</label>
+                          {{ form.new_password1 }}
+                          <div class="text-danger">
+                              {{ form.new_password1.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-12 col-sm-6 col-md-4">
+                        <label for="{{form.new_password2.id_for_label}}" class="form-label">Şifrənin təsdiqi</label>
+                        {{ form.new_password2 }}
+                        <div class="text-danger">
+                            {{ form.new_password2.errors }}
+                        </div>
+                      </div>
+
+                  </div>
+              
+                  <button class="btn btn-success my-3" type="submit">Yenilə</button>
+                  <hr>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                    Sil
+                  </button>
+                </form>
+      
+          </div>
+      </div>
+      
+     </div>
+
+  </div>
+</div>
+
+  
+  <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          İşçi haqqında bütün məlumatları silmək istədiyinizə əminsinizmi?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+            <form action="{% url 'accounts:delete' account.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Sil</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock %}

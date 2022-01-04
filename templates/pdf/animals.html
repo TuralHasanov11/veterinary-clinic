@@ -1,0 +1,109 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{month}} Hesabat</title>
+        <style type="text/css">
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0;
+                padding: 1em;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+
+            table{
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 10px;
+            }
+            tr{
+                border-bottom: 0.1em solid #ddd;
+            }
+            td{
+                padding:0.5em;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                -o-text-overflow: ellipsis;
+                max-width:60px;
+                
+                word-wrap:break-word;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>{{month}} Hesabat
+                </p>
+            </div>
+        <div>
+
+        <table class="table table-striped">
+            <thead class="bg-success text-light">
+            <tr style="background-color: mediumseagreen;">
+                <th scope="col">#</th>
+                <th scope="col">Sahibi</th>
+                <th scope="col">aa</th>
+                <th scope="col">Növü</th>
+                <th scope="col">Yaşı</th>
+                <th scope="col">Çəkisi</th>
+                <th scope="col">Rəng </th>
+                <th scope="col">Qəbul tarixi və saatı</th>
+                <th scope="col">Telefon</th>
+                <th scope="col">Həkim</th>
+                <th scope="col">Müayinə</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+                    <tr class="animal-{{ forloop.counter }}">
+                        <th scope="row">   
+                            {{ forloop.counter}}
+                        </th>
+                        <td>{{animal.owner}}</td>
+                        <td>{{animal}}</td>
+                        <td>{{animal.breed_name}}</td>
+                        <td>{{animal.age}}</td>
+                        <td>{{animal.weight}}</td>
+                        <td>{{animal.color_name}}</td>
+                        <td>{{animal.entry_day|date:'d.m.Y'}} {{animal.entry_time|date:'H:i'}}</td>
+                        <td>{{animal.phone}}</td>
+                        <td>{{animal.doctor}}</td>
+                        <td>{{animal.examination}} ({{animal.examination.price}} AZN)</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        
+            <tfoot>
+                <tr style="background-color: mediumseagreen;">
+                    <th scope="col">#</th>
+                    <th scope="col">Sahibi</th>
+                    <th scope="col">Ləqəbi</th>
+                    <th scope="col">Növü</th>
+                    <th scope="col">Yaşı</th>
+                    <th scope="col">Çəkisi</th>
+                    <th scope="col">Rəng</th>
+                    <th scope="col">Qəbul tarixi və saatı</th>
+                    <th scope="col">Telefon</th>
+                    <th scope="col">Həkim</th>
+                    <th scope="col">Müayinə</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    </body>
+</html>

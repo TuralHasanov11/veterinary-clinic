@@ -1,0 +1,153 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-4">Heyvan məlumatlarına dəyişiklik et</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'animals:list' %}">Heyvanlar</a></li>
+    <li class="breadcrumb-item active">{{animal}}</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+       <div class="container">
+        <div class="row g-5">
+            <div class="col-12 col-md-10">
+                
+                <form class="needs-validation" novalidate method="post">
+                    {% csrf_token %}
+                    {% include 'snippets/form_errors.html' with errors=form.non_field_errors %}
+        
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="owner" class="form-label">Sahibi</label>
+                            {{ form.owner }}
+                            <div class="invalid-feedback">
+                                {{ form.owner.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <label for="name" class="form-label">Ləqəb</label>
+                            {{ form.name }}
+                            <div class="invalid-feedback">
+                                {{ form.name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="age" class="form-label">Yaşı</label>
+                            {{ form.age }}
+                            <div class="invalid-feedback">
+                                {{ form.age.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <label for="weight" class="form-label">Çəkisi, kq</label>
+                            {{ form.weight }}
+                            <div class="invalid-feedback">
+                                {{ form.weight.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <label for="phone" class="form-label">Telefon</label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text">+994</span>
+                              {{ form.phone }}
+                            <div class="invalid-feedback">
+                                {{ form.phone.errors }}
+                              </div>
+                            </div>
+                        </div>
+
+                      <div class="col-md-5">
+                        <label for="breed" class="form-label">Növü</label>
+                        {{ form.breed }}
+                        <div class="invalid-feedback">
+                            {{ form.breed.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="color" class="form-label">Rəng</label>
+                        {{ form.color }}
+                        <div class="invalid-feedback">
+                            {{ form.color.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-5">
+                        <label for="doctor" class="form-label">Həkim</label>
+                        {{ form.doctor }}
+                        <div class="invalid-feedback">
+                            {{ form.doctor.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="examination" class="form-label">Müayinə</label>
+                        {{ form.examination }}
+                        <div class="invalid-feedback">
+                            {{ form.examination.errors }}
+                        </div>
+                      </div>
+                
+                      <div class="col-md-4">
+                        <label for="id_entry_date" class="form-label">Qəbul tarixi</label>
+                        {{ form.entry_date }}
+                        <div class="text-danger">
+                            {{ form.entry_date.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="note" class="form-label">Not</label>
+                        {{ form.note }}
+                        <small>Maksimum 255 hərf</small>
+                        <div class="invalid-feedback">
+                            {{ form.note.errors }}
+                        </div>
+                    </div>
+
+                    </div>
+                
+                    <hr class="my-4">
+                
+                    <button class="btn btn-success" type="submit">Təsdiqlə</button>
+                  </form>
+        
+            </div>
+        </div>
+        
+       </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>tinymce.init({selector:'textarea'});</script>
+
+<script>
+    tinymce.init({
+        selector: 'textarea#id_note',
+        height: 500,
+        menubar: false,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+        'bold italic backcolor | alignleft aligncenter ' +
+        'alignright alignjustify | bullist numlist outdent indent | ' +
+        'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+
+</script>
+{% endblock %}

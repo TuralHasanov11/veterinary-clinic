@@ -1,0 +1,62 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-4">Həkimlərin siyahısı</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">Həkimlər</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+
+        <div class="card card-body my-4">
+            <h2>Həkim əlavə et</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="fieldWrapper">
+                    {{ form.name.errors }}
+                    <label for="name">Ad:</label>
+                    {{ form.name }}
+                </div>
+                <button type="submit">Əlavə et</button>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Adı</th>
+                    <th scope="col">Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                        <tr class="doctor-{{ forloop.counter }}">
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{doctor}}</td>
+                            <td>
+                                <a href="{% url 'animals:doctor_edit' doctor.id %}">Edit</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            
+                <tfoot class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adı</th>
+                        <th scope="col">Əməliyyatlar</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+
+
+{% endblock %}

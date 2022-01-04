@@ -1,0 +1,48 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-4">Heyvan məlumatlarına dəyişiklik et</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'animals:list' %}">Heyvanlar</a></li>
+    <li class="breadcrumb-item active">{{animal}}</li>
+    <li class="breadcrumb-item"><a href="{% url 'animals:edit' animal.id %}">Dəyişiklik et</a></li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+       <div class="container">
+        <div class="row g-5">
+            <div class="col-12 col-md-10">
+                
+                <ul class="list-group">
+                    <li class="list-group-item active" aria-current="true">{{animal}}</li>
+                    <li class="list-group-item"><b>Sahibi:</b> {{animal.owner}}</li>
+                    <li class="list-group-item"><b>Ləqəbi:</b> {{animal.name}}</li>
+                    <li class="list-group-item"><b>Növü:</b> {{animal.breed_name}}</li>
+                    <li class="list-group-item"><b>Yaşı:</b> {{animal.age}}</li>
+                    <li class="list-group-item"><b>Çəkisi</b> {{animal.weight}}</li>
+                    <li class="list-group-item"><b>Rəng:</b> {{animal.color_name}}</li>
+                    <li class="list-group-item"><b>Qəbul tarixi və saatı:</b> {{animal.entry_time|date:'H:i'}} {{animal.entry_time|date:'H:i'}}</li>
+                    <li class="list-group-item"><b>Telefon:</b> {{animal.phone}}</li>
+                    <li class="list-group-item"><b>Müayinə:</b> {{animal.examination}} ({{animal.examination.price}} AZN)</li>
+                    <li class="list-group-item"><b>Həkim:</b> {{animal.doctor}}</li>
+                </ul>
+
+                <hr>
+                <a class="btn bg-gradient btn-warning m-1" href="{% url 'animals:edit' animal.id %}">Dəyişiklik et <i class="fas fa-edit"></i></a>
+                
+                <form action="{% url 'animals:delete' animal.id %}?redirect=true" method="post">
+                    {% csrf_token %}
+                    <button class="btn bg-gradient btn-danger btn-delete-animal m-1" type="submit">Sil <i class="fas fa-trash-alt"></i></button>
+                </form>
+        
+            </div>
+        </div>
+        
+       </div>
+
+    </div>
+</div>
+
+{% endblock %}
+

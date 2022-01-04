@@ -1,0 +1,219 @@
+{% extends 'app.html' %}
+{% load static %}
+
+{% block content %}
+
+<div id="examinationsApp">
+<h1 class="mt-4">Müayinələr</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">Müayinələr</li>
+</ol>
+
+<div class="card mb-4">
+    <div class="card-body">
+        
+       
+        <div v-if="error" class="my-3 delete-error-alert alert alert-danger alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <span v-html="errorMessage"></span>
+            <button type="button" @clicked="clearMessages" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        <div v-if="success" class="my-3 delete-success-alert alert alert-success alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>            
+            <span v-html="successMessage"></span>
+            <button type="button" @clicked="clearMessages" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        
+        <div class="card card-body my-4">
+            <h3>Müayinə əlavə et</h3>
+
+            <form @submit.prevent="createExamination">
+                <div class="mb-3 row">
+                    <div class="col-12">
+                        <label for="name" class="form-label">Ad</label>
+                        <input type="text" v-model="examination.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                        <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
+                    </div>
+                    <div class="col-12 form-check m-3">
+                        <input class="form-check-input" type="checkbox" value="" id="isRange" v-model="isRange">
+                        <label class="form-check-label" for="isRange">
+                            Qiymət aralığı (minimum/maksimum qiymət)
+                        </label>
+                    </div>
+                    <template v-if="isRange">
+                        <div class="col-sm-6">
+                            <label for="min_price" class="form-label">Minimum Qiyməti</label>
+                            <input type="number" min="0" step="0.01" v-model="examination.min_price" :class="{'is-invalid':validationErrors.min_price}" class="form-control" placeholder="Minimum qiymət">
+                            <li v-if="validationErrors && validationErrors.min_price" class="invalid-feedback" v-for="error in validationErrors.min_price" v-html="error"></li>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="max_price" class="form-label">Maksimum Qiyməti</label>
+                            <input type="number" min="0" step="0.01" v-model="examination.max_price" :class="{'is-invalid':validationErrors.max_price}" class="form-control" placeholder="Maksimum qiymət">
+                            <li v-if="validationErrors && validationErrors.max_price" class="invalid-feedback" v-for="error in validationErrors.max_price" v-html="error"></li>
+                        </div>
+                    </template>
+
+                    <template v-else>
+                        <div class="col-sm-6">
+                            <label for="price" class="form-label">Qiyməti</label>
+                            <input type="number" step="0.01" v-model="examination.price" :class="{'is-invalid':validationErrors.max_price||validationErrors.min_price}" class="form-control" placeholder="Qiyməti">
+                            <li v-if="validationErrors && validationErrors.max_price" class="invalid-feedback" v-for="error in validationErrors.max_price" v-html="error"></li>
+                            <li v-if="validationErrors && validationErrors.min_price" class="invalid-feedback" v-for="error in validationErrors.min_price" v-html="error"></li>
+                        </div>
+                    </template>
+                </div>
+  
+                <button class="btn btn-success" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+            </form>
+        </div>
+
+
+        
+        <div class="list my-3">
+            <h3>Müayinələrin siyahısı</h3>
+
+            <div class="table-responsive rounded my-4">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-success text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Adı</th>
+                            <th scope="col">Qiyməti</th>
+                            <th scope="col">Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    
+                    <template v-if="loading">
+                        <tbody>
+                            <tr>
+                                <td colspan="7">
+                                    <div style="width: 100%; height: 15rem;" class="row justify-content-center align-items-center">
+                                        <div class="spinner-grow text-success" style="width: 3rem; height: 3rem;" role="status">
+                                            <span class="visually-hidden" >Loading...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                    
+                    <tbody v-if="examinations && examinations.length>0">
+                        <tr class="examination" v-for="(examination, index) in examinations" :key="index">
+                            <th scope="row" v-html="index+1"></th>
+                            <td v-html="examination.name"></td>
+                            <td v-html="examination.price"></td>
+                            <td>
+                                <button @click="selectExamination(examination)" type="button" class="btn btn-primary examinationEditBtn" data-bs-toggle="modal" data-bs-target="#examinationEditModal">
+                                    Dəyişiklik et <i class="fas fa-edit"></i>
+                                </button> 
+                                <button @click="selectExamination(examination)" type="button" class="btn btn-danger examinationDeleteBtn" data-bs-toggle="modal" data-bs-target="#examinationDeleteModal">
+                                    Delete <i class="fas fa-trash-alt"></i>
+                                </button>   
+                            </td>
+                        </tr>
+                    </tbody>
+    
+                
+                    <tfoot class="bg-success text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Adı</th>
+                            <th scope="col">Qiyməti</th>
+                            <th scope="col">Əməliyyatlar</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        
+        
+
+        <div class="modal fade" id="examinationEditModal" tabindex="-1" aria-labelledby="examinationEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="examinationEditModalLabel">Müayinə məlumatlarının yenilənməsi</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form @submit.prevent="editExamination" v-if="selectedExamination">
+                        <div class="mb-3 row">
+                            <div class="col-sm-4">
+                                <label for="name" class="form-label">Ad</label>
+                                <input type="text" v-model="selectedExamination.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                                <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
+                            </div>
+                            <div class="col-12 form-check m-3">
+                                <input class="form-check-input" type="checkbox" value="" id="isRangeUpdate" v-model="isRangeUpdate">
+                                <label class="form-check-label" for="isRangeUpdate">
+                                  Qiymət aralığı (minimum/maksimum qiymət)
+                                </label>
+                            </div>
+                            <template v-if="isRangeUpdate">
+                                <div class="col-sm-4">
+                                    <label for="min_price" class="form-label">Minimum Qiyməti</label>
+                                    <input type="number" step="0.01" v-model="selectedExamination.min_price" :class="{'is-invalid':validationErrors.min_price}" class="form-control" placeholder="Qiyməti">
+                                    <li v-if="validationErrors && validationErrors.min_price" class="invalid-feedback" v-for="error in validationErrors.min_price" v-html="error"></li>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="max_price" class="form-label">Maksimum Qiyməti</label>
+                                    <input type="number" step="0.01" v-model="selectedExamination.max_price" :class="{'is-invalid':validationErrors.max_price}" class="form-control" placeholder="Bizim qiymət">
+                                    <li v-if="validationErrors && validationErrors.max_price" class="invalid-feedback" v-for="error in validationErrors.max_price" v-html="error"></li>
+                                </div>
+                            </template>
+        
+                            <template v-else>
+                                <div class="col-sm-4">
+                                    <label for="price" class="form-label">Qiyməti</label>
+                                    <input type="number" step="0.01" v-model="selectedExamination.price" :class="{'is-invalid':validationErrors.price}" class="form-control" placeholder="Qiyməti">
+                                    <li v-if="validationErrors && validationErrors.min_price" class="invalid-feedback" v-for="error in validationErrors.min_price" v-html="error"></li>
+                                    <li v-if="validationErrors && validationErrors.max_price" class="invalid-feedback" v-for="error in validationErrors.max_price" v-html="error"></li>
+                                </div>
+                            </template>
+
+                        </div>
+      
+                      <button class="btn btn-success" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="examinationDeleteModal" tabindex="-1" aria-labelledby="examinationDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="examinationDeleteModalLabel">Müayinəni sil</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Müayinəni silmək istədiyinizə əminsinizmi?</p>
+                    <form v-if="selectedExamination" @submit.prevent="deleteExamination">
+                        <button type="submit" class="btn btn-danger" :disabled="loading"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/app/examinations.js' %}"></script>
+{% endblock %}

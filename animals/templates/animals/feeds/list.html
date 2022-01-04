@@ -1,0 +1,130 @@
+{% extends 'app.html' %}
+
+{% block content %}
+
+<div id="animalFeedApp">
+    <h1 class="mt-4">Heyvan yemləri</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">Heyvan Yemləri</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+        
+        <!-- Search -->
+
+        <div class="card card-body my-4">
+            <h2>Yem əlavə et</h2>
+            <form @submit.prevent="createFeed">
+                <div class="fieldWrapper">
+                    <label for="name">Ad:</label>
+                    <input type="text" v-model="feed.name">
+                </div>
+                <div class="fieldWrapper">
+                    <label for="quantity">Sayı:</label>
+                    <input type="number" v-model="feed.quantity">
+                </div>
+                <div class="fieldWrapper">
+                    <label for="weight">Kütləsi:</label>
+                    <input type="number" step="0.01" v-model="feed.weight">
+                </div>
+                <button type="submit" class="btn btn-success">Əlavə et</button>
+            </form>
+        </div>
+
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ad</th>
+                    <th scope="col">Sayı</th>
+                    <th scope="col">Kütləsi</th>
+                    <th scope="col">Ümumi kütlə</th>
+                    <th scope="col">Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody v-if="feeds && feedsCount>0">
+                    <tr class="feeds_item" v-for="(feed, index) in feeds" :key="index">
+                        <th scope="row" v-html="index+1"></th>
+                        <td class="feed_name" v-html="feed.name"></td>
+                        <td class="feed_quantity" v-html="feed.quantity"></td>
+                        <td class="feed_weight" v-html="feed.weight"></td>
+                        <td v-html="feed.total_weight"></td>
+                        <td>
+                            <button @click="selectFeed(feed)" type="button" class="btn btn-primary feedEditBtn" data-bs-toggle="modal" data-bs-target="#feedEditModal">
+                                Edit
+                            </button> 
+                            <button @click="selectFeed(feed)" type="button" class="btn btn-danger feedDeleteBtn" data-bs-toggle="modal" data-bs-target="#feedDeleteModal">
+                                Delete
+                            </button>   
+                        </td>
+                    </tr>
+                </tbody>
+            
+                <tfoot class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Ad</th>
+                        <th scope="col">Sayı</th>
+                        <th scope="col">Qiyməti</th>
+                        <th scope="col">Ümumi qiyməti</th>
+                        <th scope="col">Əməliyyatlar</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <!-- pagination -->
+
+
+        <div class="modal fade" id="feedEditModal" tabindex="-1" aria-labelledby="feedEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="feedEditModalLabel">Yem məlumatlarının yenilənməsi</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="feedEditForm" @submit.prevent="editFeed()" v-if="selectedFeed">
+                      <input type="text" name="feed_name" id="feed_name" v-model="selectedFeed.name">
+                      <input type="number" name="feed_quantity" id="feed_quantity" v-model="selectedFeed.quantity">
+                      <input type="number" name="feed_weight" id="feed_weight" step="0.01" v-model="selectedFeed.weight">
+                      <button type="submit">Təsdiq et</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="feedDeleteModal" tabindex="-1" aria-labelledby="feedDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="feedDeleteModalLabel">Yemi sil</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Yemi silmək istədiyinizə əminsinizmi?</p>
+                    <form id="feedDeleteForm" @submit.prevent="deleteFeed()" v-if="selectedFeed">
+                        <button type="submit" class="btn btn-danger">Təsdiq et</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+
+{% endblock %}

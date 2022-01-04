@@ -1,0 +1,45 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1>Məlumatları yenilə</h1>
+<h3>{{company.name}}</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ update_form.non_field_errors }}
+    <div class="fieldWrapper">
+        <label for="name">Şirkətin Adı:</label>
+        {{ update_form.name }}
+        {{ update_form.name.errors }}
+    </div>
+    <button type="submit">Yenilə</button>
+</form>
+
+<hr>
+
+<hr>
+
+
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCompanyModal">
+    Sil
+</button>
+
+<div class="modal fade" id="deleteCompanyModal" tabindex="-1" aria-labelledby="deleteCompanyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            Dərman şirkəti haqqında bütün məlumatları silmək istədiyinizə əminsinizmi?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+            <form action="{% url 'medicines:company_delete' company.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Sil</button>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+    
+<hr>
+
+{% endblock %}

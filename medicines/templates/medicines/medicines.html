@@ -1,0 +1,276 @@
+{% extends 'app.html' %}
+{% load static %}
+
+{% block content %}
+
+<div id="medicinesApp">
+<h1 class="mt-4">Dərmanlar</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">Dərmanlar</li>
+</ol>
+
+<div class="card mb-4">
+    <div class="card-body">
+        
+       
+        <div v-if="error" class="my-3 delete-error-alert alert alert-danger alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <span v-html="errorMessage"></span>
+            <button type="button" @clicked="clearMessages" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        <div v-if="success" class="my-3 delete-success-alert alert alert-success alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>            
+            <span v-html="successMessage"></span>
+            <button type="button" @clicked="clearMessages" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        
+        <div class="card card-body my-4">
+            <h3>Dərman əlavə et</h3>
+            <form @submit.prevent="createMedicine">
+                <div class="mb-3 row">
+                    <div class="col-sm-4 m-2">
+                        <label for="name" class="form-label">Ad</label>
+                        <input type="text" v-model="medicine.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                        <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
+                    </div>
+                    <div class="col-sm-4 m-2">
+                        <label for="company" class="form-label">Şirkət</label>
+                        <select class="form-select" v-model="medicine.company">
+                            <option value="0" selected>Şirkəti seçin</option>
+                            <option v-for="company in companies" :value="company.id" v-html="company.name"></option>
+                        </select>
+                        <li v-if="validationErrors && validationErrors.company" class="invalid-feedback" v-for="error in validationErrors.company" v-html="error"></li>
+                    </div>
+                    <div class="col-sm-4 col-md-3 m-2">
+                        <label for="quantity" class="form-label">Sayı</label>
+                        <input type="number" min="0" v-model="medicine.quantity" :class="{'is-invalid':validationErrors.quantity}" class="form-control" placeholder="Sayı">
+                        <li v-if="validationErrors && validationErrors.quantity" class="invalid-feedback" v-for="error in validationErrors.quantity" v-html="error"></li>
+                    </div>
+                    <div class="col-sm-4 col-md-3 m-2">
+                        <label for="price" class="form-label">Qiyməti</label>
+                        <input type="number" min="0" step="0.01" v-model="medicine.price" :class="{'is-invalid':validationErrors.price}" class="form-control" placeholder="Qiyməti">
+                        <li v-if="validationErrors && validationErrors.price" class="invalid-feedback" v-for="error in validationErrors.price" v-html="error"></li>
+                    </div>
+                    <div class="col-sm-4 col-md-3 m-2">
+                        <label for="our_price" class="form-label">Bizim Qiymətimiz</label>
+                        <input type="number" min="0" step="0.01" v-model="medicine.our_price" :class="{'is-invalid':validationErrors.our_price}" class="form-control" placeholder="Bizim qiymət">
+                        <li v-if="validationErrors && validationErrors.our_price" class="invalid-feedback" v-for="error in validationErrors.our_price" v-html="error"></li>
+                    </div>
+                </div>
+  
+                <button class="btn btn-success mx-2" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+            </form>
+        </div>
+
+        <div class="list my-3">
+            <h3>Dərmanların siyahısı</h3>
+
+            <form @submit.prevent="filtering" class="my-3">
+                <div class="row">
+                    <div class="col col-md-3 col-sm-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Axtar" v-model="searchQuery">
+                            <button class="btn btn-outline-secondary" type="submit">Axtar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table-responsive rounded my-4">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-success text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">
+                                <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                                    <span>Ad</span>
+                                    <div class="d-flex flex-column">
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':orderDirection}"><i class="fas fa-chevron-up"></i></span> 
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':!orderDirection}"><i class="fas fa-chevron-down"></i></span>
+                                    </div>
+                                </span>
+                            </th>
+                            <th scope="col">Şirkət</th>
+                            <th scope="col">Qiyməti (1 ədəd)</th>
+                            <th scope="col">Sayı</th>
+                            <th scope="col">Qiyməti (ümumi)</th>
+                            <th scope="col">Bizim satış qiyməti (1 ədəd)</th>
+                            <th scope="col">Bizim qiymət (ümumi)</th>
+                            <th scope="col">Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    
+                    <template v-if="loading">
+                        <tbody>
+                            <tr>
+                                <td colspan="7">
+                                    <div style="width: 100%; height: 15rem;" class="row justify-content-center align-items-center">
+                                        <div class="spinner-grow text-success" style="width: 3rem; height: 3rem;" role="status">
+                                            <span class="visually-hidden" >Loading...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                    
+                    <tbody v-if="medicines && medicinesCount>0">
+                        <tr class="medicine" v-for="(medicine, index) in medicines" :key="index">
+                            <th scope="row" v-html="(index+1)+((currentPageNum-1)*perPage)"></th>
+                            <td v-html="medicine.name"></td>
+                            <td class="medicine_company" v-html="medicine.company.name"></td>
+                            <td class="medicine_price" v-html="medicine.price"></td>
+                            <td class="medicine_quantity" v-html="medicine.quantity"></td>
+                            <td v-html="medicine.total_price"></td>
+                            <td v-html="medicine.our_price"></td>
+                            <td v-html="medicine.our_total_price"></td>
+                            <td>
+                                <button @click="selectMedicine(medicine)" type="button" class="btn btn-primary medicineEditBtn" data-bs-toggle="modal" data-bs-target="#medicineEditModal">
+                                    Dəyişiklik et <i class="fas fa-edit"></i>
+                                </button> 
+                                <button @click="selectMedicine(medicine)" type="button" class="btn btn-danger medicineDeleteBtn" data-bs-toggle="modal" data-bs-target="#medicineDeleteModal">
+                                    Delete <i class="fas fa-trash-alt"></i>
+                                </button>   
+                            </td>
+                        </tr>
+                    </tbody>
+
+                
+                    <tfoot class="bg-success text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col"> 
+                                <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                                    <span>Ad</span>
+                                    <div class="d-flex flex-column">
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':orderDirection}"><i class="fas fa-chevron-up"></i></span> 
+                                        <span @click="orderBy('name')" class="btn-order-by" :class="{'text-dark':!orderDirection}"><i class="fas fa-chevron-down"></i></span>
+                                    </div>
+                                </span>
+                            </th>
+                            <th scope="col">Şirkət</th>
+                            <th scope="col">Qiyməti (1 ədəd)</th>
+                            <th scope="col">Sayı</th>
+                            <th scope="col">Qiyməti (ümumi)</th>
+                            <th scope="col">Bizim satış qiyməti (1 ədəd)</th>
+                            <th scope="col">Bizim qiymət (ümumi)</th>
+                            <th scope="col">Əməliyyatlar</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        
+
+            <nav v-if="medicines && medicinesCount > perPage">
+                <ul class="pagination justify-content-center">
+                    <template v-if="prevPage">
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getMedicines(firstPage)">İlk</button>
+                        </li>
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getMedicines(prevPage)"><i class="fas fa-angle-double-left"></i></button>
+                        </li>
+                    </template>
+
+                    <li class="page-item mx-1" v-for="i in totalPages">
+                        <button v-if="i===currentPageNum" class="btn" :class="{'btn-primary':i==currentPageNum, 'btn-outline-primary':i!=currentPageNum}" @click="getMedicines(currentPage)" v-html="currentPageNum"></button>
+                        <button v-else-if="i > currentPageNum-3 && i < currentPageNum+3" class="btn" :class="{'btn-primary':i==currentPageNum, 'btn-outline-primary':i!=currentPageNum}" @click="getMedicines(currentPage.replace('page='+currentPageNum, 'page='+i))" v-html="i"></button>
+                    </li>
+                    
+                    <template v-if="nextPage">
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getMedicines(nextPage)"><i class="fas fa-angle-double-right"></i></button>
+                        </li></a>
+                        <li class="page-item mx-1">
+                            <button class="btn btn-outline-primary" @click="getMedicines(lastPage)">Sonuncu</button>
+                        </li>
+                    </template>
+                </ul>
+            </nav>
+        </div>
+
+
+        <div class="modal fade" id="medicineEditModal" tabindex="-1" aria-labelledby="medicineEditModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="medicineEditModalLabel">Dərman məlumatlarının yenilənməsi</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="editMedicineForm" @submit.prevent="editMedicine" v-if="selectedMedicine">
+                        <div class="mb-3 row">
+                            <div class="col-sm-4">
+                                <label for="name" class="form-label">Ad</label>
+                                <input type="text" v-model="selectedMedicine.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                                <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="company" class="form-label">Şirkət</label>
+                                <select class="form-select" v-model="selectedMedicine.company.id">
+                                    <option v-for="company in companies" :value="company.id" v-html="company.name"></option>
+                                </select>
+                                <li v-if="validationErrors && validationErrors.company" class="invalid-feedback" v-for="error in validationErrors.company" v-html="error"></li>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="quantity" class="form-label">Sayı</label>
+                                <input type="number" v-model="selectedMedicine.quantity" :class="{'is-invalid':validationErrors.quantity}" class="form-control" placeholder="Sayı">
+                                <li v-if="validationErrors && validationErrors.quantity" class="invalid-feedback" v-for="error in validationErrors.quantity" v-html="error"></li>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="price" class="form-label">Qiyməti</label>
+                                <input type="number" step="0.01" v-model="selectedMedicine.price" :class="{'is-invalid':validationErrors.price}" class="form-control" placeholder="Qiyməti">
+                                <li v-if="validationErrors && validationErrors.price" class="invalid-feedback" v-for="error in validationErrors.price" v-html="error"></li>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="our_price" class="form-label">Qiyməti</label>
+                                <input type="number" step="0.01" v-model="selectedMedicine.our_price" :class="{'is-invalid':validationErrors.our_price}" class="form-control" placeholder="Bizim qiymət">
+                                <li v-if="validationErrors && validationErrors.our_price" class="invalid-feedback" v-for="error in validationErrors.our_price" v-html="error"></li>
+                            </div>
+                        </div>
+      
+
+                      <button class="btn btn-success" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="medicineDeleteModal" tabindex="-1" aria-labelledby="medicineDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="medicineDeleteModalLabel">Dərmanı sil</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Dərmanı silmək istədiyinizə əminsinizmi?</p>
+                    <form id="medicineDeleteForm" @submit.prevent="deleteMedicine" v-if="selectedMedicine">
+                        <button type="submit" class="btn btn-danger" :disabled="loading"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/app/medicines.js' %}"></script>
+{% endblock %}

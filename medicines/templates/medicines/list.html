@@ -1,0 +1,137 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-4">Dərmanların siyahısı</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">Dərmanlar</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+        <!-- <form action="" method="get" id="filterForm">
+            <div class="row my-3">
+                <div class="col">
+                    <div class="row">
+                        <label for="sortBy" class="col-sm-2 col-form-label col-form-label-sm">Sırala</label>
+                        <div class="col-sm-10">
+                            <div class="input-group mb-3">
+                                <select  id='sortBy' class="form-select" name="sort_by">
+                                    <option value="created_at"
+                                        {% if not request.GET.sort_by %} selected {% endif %}
+                                    >Siyahıya alınma tarixinə görə</option>
+                                    <option value="username" 
+                                        {% ifequal  request.GET.sort_by 'username' %} 
+                                            selected 
+                                        {% endifequal  %}
+                                    >İstifadəçi adına görə</option>
+                                    <option value="last_login" 
+                                        {% ifequal request.GET.sort_by 'last_login' %} 
+                                            selected
+                                        {% endifequal %}
+                                    >Sonuncu qeydiyyat tarixinə görə</option>
+                                </select>
+                                <select  id='sortDirection' class="form-select" name="sort_direction">
+                                    <option value="desc"
+                                        {% if not request.GET.sort_direction %} selected {% endif %}
+                                    >Azalan</option>
+                                    <option value="asc" 
+                                        {% ifequal  request.GET.sort_direction 'asc' %} 
+                                            selected 
+                                        {% endifequal  %}
+                                    >Artan</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <label for="perPage" class="col-sm-8 col-form-label col-form-label-sm">Hər səhifədəki məlumat sayı</label>
+                        <div class="col-sm-4">
+                            <div class="input-group mb-3">
+                                <select  id='perPage' class="form-select" name="per_page">
+                                    <option value="1"
+                                        {% if not request.GET.per_page %} selected {% endif %}
+                                    >1</option>
+                                    <option value="2" 
+                                        {% ifequal  request.GET.per_page '2' %} 
+                                            selected 
+                                        {% endifequal  %}
+                                    >2</option>
+                                    <option value="3" 
+                                        {% ifequal request.GET.per_page '3' %} 
+                                            selected
+                                        {% endifequal %}
+                                    >3</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name='q' placeholder="Axtar" value="{{request.GET.q}}">
+                        <button class="btn btn-outline-secondary" type="submit" id="searchBtn">Axtar</button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="page" value="{{request.GET.page}}">
+        </form> -->
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Adı</th>
+                    <th scope="col">Şirkət</th>
+                    <th scope="col">Qiyməti (1 ədəd)</th>
+                    <th scope="col">Sayı</th>
+                    <th scope="col">Qiyməti (ümumi)</th>
+                    <th scope="col">Bizim satış qiyməti (1 ədəd)</th>
+                    <th scope="col">Bizim qiymət (ümumi)</th>
+                    <th scope="col">Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for medicine in medicines %}
+                        <tr class="medicine-{{ forloop.counter }}">
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{medicine}}</td>
+                            <td>{{medicine.company}}</td>
+                            <td>{{medicine.price}}</td>
+                            <td>{{medicine.quantity}}</td>
+                            <td>{{medicine.total_price}}</td>
+                            <td>{{medicine.our_price}}</td>
+                            <td>{{medicine.our_total_price}}</td>
+                            <td>
+                                <a href="{% url 'medicines:edit' medicine.id %}">Edit</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            
+                <tfoot class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Adı</th>
+                        <th scope="col">Şirkət</th>
+                        <th scope="col">Qiyməti (1 ədəd)</th>
+                        <th scope="col">Sayı</th>
+                        <th scope="col">Qiyməti (ümumi)</th>
+                        <th scope="col">Bizim satış qiyməti (1 ədəd)</th>
+                        <th scope="col">Bizim qiymət (ümumi)</th>
+                        <th scope="col">Əməliyyatlar</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        {% include 'medicines/snippets/pagination.html' with medicines=medicines %}
+    </div>
+</div>
+
+
+
+{% endblock %}

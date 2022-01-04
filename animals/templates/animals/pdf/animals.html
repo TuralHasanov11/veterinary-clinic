@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{month}} Hesabat</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                color: #333;
+                background-color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>{{month}}</p>
+            </div>
+        <div>
+        <div class='details'>
+            <table class="table table-striped">
+                <thead class="bg-success text-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Sahibi</th>
+                    <th scope="col">Ləqəbi</th>
+                    <th scope="col">Növü</th>
+                    <th scope="col">Yaşı</th>
+                    <th scope="col">Çəkisi</th>
+                    <th scope="col">Rəng </th>
+                    <th scope="col">Qəbul tarixi</th>
+                    <th scope="col">Qəbul saatı</th>
+                    <th scope="col">Telefon</th>
+                    <th scope="col">Həkim</th>
+                    <th scope="col">Müayinə</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for animal in animals %}
+                        <tr class="animal-{{ forloop.counter }}">
+                            <th scope="row">   
+                               
+                                {{ forloop.counter}}
+                            </th>
+                            <td>{{animal.owner}}</td>
+                            <td>{{animal}}</td>
+                            <td>{{animal.breed_name}}</td>
+                            <td>{{animal.age}}</td>
+                            <td>{{animal.weight}}</td>
+                            <td>{{animal.color_name}}</td>
+                            <td>{{animal.entry_day|date:'d.m.Y'}}</td>
+                            <td>{{animal.entry_time|date:'H:i'}}</td>
+                            <td>{{animal.phone}}</td>
+                            <td>{{animal.doctor}}</td>
+                            <td>{{animal.examination}} ({{animal.examination.price}} AZN)</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            
+                <tfoot class="bg-success text-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Sahibi</th>
+                        <th scope="col">Ləqəbi</th>
+                        <th scope="col">Növü</th>
+                        <th scope="col">Yaşı</th>
+                        <th scope="col">Çəkisi</th>
+                        <th scope="col">Rəng</th>
+                        <th scope="col">Qəbul tarixi</th>
+                        <th scope="col">Qəbul saatı</th>
+                        <th scope="col">Telefon</th>
+                        <th scope="col">Həkim</th>
+                        <th scope="col">Müayinə</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    </body>
+</html>

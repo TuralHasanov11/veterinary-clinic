@@ -1,0 +1,153 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-2">Heyvanların əlavə et</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'animals:list' %}">Heyvanlar</a></li>
+    <li class="breadcrumb-item active">Heyvan əlavə et</li>
+</ol>
+<div class="card mb-4">
+    <div class="card-body">
+       <div class="container">
+        <div class="row g-5">
+            <div class="col-12 col-md-10">
+                
+                <form class="needs-validation" novalidate method="post">
+                    {% csrf_token %}
+                    {% include 'snippets/form_errors.html' with errors=form.non_field_errors %}
+        
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="id_owner" class="form-label">Sahibi</label>
+                            {{ form.owner }}
+                            <div class="text-danger">
+                                {{ form.owner.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <label for="id_name" class="form-label">Ləqəb</label>
+                            {{ form.name }}
+                            <div class="text-danger">
+                                {{ form.name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="id_age" class="form-label">Yaşı</label>
+                            {{ form.age }}
+                            <div class="text-danger">
+                                {{ form.age.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <label for="id_weight" class="form-label">Çəkisi, kq</label>
+                            {{ form.weight }}
+                            <div class="text-danger">
+                                {{ form.weight.errors }}
+                            </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <label for="id_phone" class="form-label">Telefon</label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text">+994</span>
+                              {{ form.phone }}
+                            <div class="text-danger">
+                                {{ form.phone.errors }}
+                              </div>
+                            </div>
+                        </div>
+
+                      <div class="col-md-5">
+                        <label for="id_breed" class="form-label">Növü</label>
+                        {{ form.breed }}
+                        <div class="text-danger">
+                            {{ form.breed.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="id_color" class="form-label">Rəng</label>
+                        {{ form.color }}
+                        <div class="text-danger">
+                            {{ form.color.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-5">
+                        <label for="id_doctor" class="form-label">Həkim</label>
+                        {{ form.doctor }}
+                        <div class="text-danger">
+                            {{ form.doctor.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="id_examination" class="form-label">Müayinə</label>
+                        {{ form.examination }}
+                        <div class="text-danger">
+                            {{ form.examination.errors }}
+                        </div>
+                      </div>
+                
+                      <div class="col-md-4">
+                        <label for="id_entry_date" class="form-label">Qəbul tarixi</label>
+                        {{ form.entry_date }}
+                        <div class="text-danger">
+                            {{ form.entry_date.errors }}
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="id_note" class="form-label">Not</label>
+                        {{ form.note }}
+                        <small>Maksimum 255 hərf</small>
+                        <div class="text-danger">
+                            {{ form.note.errors }}
+                        </div>
+                    </div>
+
+                    </div>
+                
+                    <hr class="my-4">
+                
+                    <button class="btn btn-success" type="submit">Əlavə et</button>
+                  </form>
+        
+            </div>
+        </div>
+        
+       </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>tinymce.init({selector:'textarea'});</script>
+
+<script>
+    tinymce.init({
+        selector: 'textarea#id_note',
+        height: 500,
+        menubar: false,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+        'bold italic backcolor | alignleft aligncenter ' +
+        'alignright alignjustify | bullist numlist outdent indent | ' +
+        'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+
+</script>
+{% endblock %}

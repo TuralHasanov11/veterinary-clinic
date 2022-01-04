@@ -1,0 +1,71 @@
+{% extends 'app.html' %}
+
+{% block content %}
+<h1 class="mt-4">İşçilərin siyahısı</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item active">İşçilər</li>
+</ol>
+
+<a href="{% url 'accounts:create' %}" class="btn btn-success"><i class="fas fa-plus-circle"></i> İşçi əlavə et</a>
+
+<hr>
+
+<div class="card mb-4">
+    <div class="card-body">
+    
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="bg-success text-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">İşçi</th>
+                    <th scope="col">Ad</th>
+                    <th scope="col">Soyad</th>
+                    <th scope="col">Vəzifə</th>
+                    <th scope="col">Sonuncu qeydiyyat</th>
+                    <th scope="col">Əməliyyatlar</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                        <tr class="account-{{ forloop.counter }}">
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{account}}</td>
+                            <td>{{account.first_name}}</td>
+                            <td>{{account.last_name}}</td>
+                            <td>{{account.getRoleName}}</td>
+                            <td>
+                                {% if account.last_login %}
+                                    {{account.last_login|date:'d.m.Y H:i'}}
+                                {% else %}
+                                    Yoxdur
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'accounts:edit' account.id %}">Dəyişiklik et <i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            
+                <tfoot class="bg-success text-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">İşçi</th>
+                        <th scope="col">Ad</th>
+                        <th scope="col">Soyad</th>
+                        <th scope="col">Vəzifə</th>
+                        <th scope="col">Sonuncu qeydiyyat</th>
+                        <th scope="col">Əməliyyatlar</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+
+
+{% endblock %}
