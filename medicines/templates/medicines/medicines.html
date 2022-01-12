@@ -8,6 +8,8 @@
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
     <li class="breadcrumb-item active">Dərmanlar</li>
+    <li class="breadcrumb-item"><a href="{% url 'medicines:companies' %}">Şirkətlər</a></li>
+
 </ol>
 
 <div class="card mb-4">
@@ -33,13 +35,13 @@
                 <div class="mb-3 row">
                     <div class="col-sm-4 m-2">
                         <label for="name" class="form-label">Ad</label>
-                        <input type="text" v-model="medicine.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad">
+                        <input type="text" v-model="medicine.name" :class="{'is-invalid':validationErrors.name}" class="form-control" placeholder="Ad" required>
                         <li v-if="validationErrors && validationErrors.name" class="invalid-feedback" v-for="error in validationErrors.name" v-html="error"></li>
                     </div>
                     <div class="col-sm-4 m-2">
                         <label for="company" class="form-label">Şirkət</label>
-                        <select class="form-select" v-model="medicine.company">
-                            <option value="0" selected>Şirkəti seçin</option>
+                        <select class="form-select" v-model="medicine.company" required>
+                            <option value="" selected>Şirkəti seçin</option>
                             <option v-for="company in companies" :value="company.id" v-html="company.name"></option>
                         </select>
                         <li v-if="validationErrors && validationErrors.company" class="invalid-feedback" v-for="error in validationErrors.company" v-html="error"></li>
@@ -83,8 +85,8 @@
                 <table class="table table-hover table-striped">
                     <thead class="bg-success text-light">
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">
+                            <th scope="col" class="align-middle">#</th>
+                            <th scope="col" class="align-middle">
                                 <span class="w-100 h-100 d-flex align-items-center justify-content-between">
                                     <span>Ad</span>
                                     <div class="d-flex flex-column">
@@ -93,13 +95,13 @@
                                     </div>
                                 </span>
                             </th>
-                            <th scope="col">Şirkət</th>
-                            <th scope="col">Qiyməti (1 ədəd)</th>
-                            <th scope="col">Sayı</th>
-                            <th scope="col">Qiyməti (ümumi)</th>
-                            <th scope="col">Bizim satış qiyməti (1 ədəd)</th>
-                            <th scope="col">Bizim qiymət (ümumi)</th>
-                            <th scope="col">Əməliyyatlar</th>
+                            <th scope="col" class="align-middle">Şirkət</th>
+                            <th scope="col" class="align-middle">Qiyməti (1 ədəd)</th>
+                            <th scope="col" class="align-middle">Sayı</th>
+                            <th scope="col" class="align-middle">Qiyməti (ümumi)</th>
+                            <th scope="col" class="align-middle">Bizim satış qiyməti (1 ədəd)</th>
+                            <th scope="col" class="align-middle">Bizim qiymət (ümumi)</th>
+                            <th scope="col" class="align-middle">Əməliyyatlar</th>
                         </tr>
                     </thead>
                     
@@ -121,7 +123,7 @@
                         <tr class="medicine" v-for="(medicine, index) in medicines" :key="index">
                             <th scope="row" v-html="(index+1)+((currentPageNum-1)*perPage)"></th>
                             <td v-html="medicine.name"></td>
-                            <td class="medicine_company" v-html="medicine.company.name"></td>
+                            <td class="medicine_company"><span v-if="medicine.company" v-html="medicine.company.name"></span></td>
                             <td class="medicine_price" v-html="medicine.price"></td>
                             <td class="medicine_quantity" v-html="medicine.quantity"></td>
                             <td v-html="medicine.total_price"></td>
@@ -141,8 +143,8 @@
                 
                     <tfoot class="bg-success text-light">
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col"> 
+                            <th scope="col" class="align-middle">#</th>
+                            <th scope="col" class="align-middle"> 
                                 <span class="w-100 h-100 d-flex align-items-center justify-content-between">
                                     <span>Ad</span>
                                     <div class="d-flex flex-column">
@@ -151,13 +153,13 @@
                                     </div>
                                 </span>
                             </th>
-                            <th scope="col">Şirkət</th>
-                            <th scope="col">Qiyməti (1 ədəd)</th>
-                            <th scope="col">Sayı</th>
-                            <th scope="col">Qiyməti (ümumi)</th>
-                            <th scope="col">Bizim satış qiyməti (1 ədəd)</th>
-                            <th scope="col">Bizim qiymət (ümumi)</th>
-                            <th scope="col">Əməliyyatlar</th>
+                            <th scope="col" class="align-middle">Şirkət</th>
+                            <th scope="col" class="align-middle">Qiyməti (1 ədəd)</th>
+                            <th scope="col" class="align-middle">Sayı</th>
+                            <th scope="col" class="align-middle">Qiyməti (ümumi)</th>
+                            <th scope="col" class="align-middle">Bizim satış qiyməti (1 ədəd)</th>
+                            <th scope="col" class="align-middle">Bizim qiymət (ümumi)</th>
+                            <th scope="col" class="align-middle">Əməliyyatlar</th>
                         </tr>
                     </tfoot>
                 </table>

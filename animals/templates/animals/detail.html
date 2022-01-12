@@ -11,21 +11,21 @@
 <div class="card mb-4">
     <div class="card-body">
        <div class="container">
-        <div class="row g-5">
-            <div class="col-12 col-md-10">
+        <div class="row">
+            <div class="col-12">
                 
                 <ul class="list-group">
-                    <li class="list-group-item active" aria-current="true">{{animal}}</li>
-                    <li class="list-group-item"><b>Sahibi:</b> {{animal.owner}}</li>
-                    <li class="list-group-item"><b>Ləqəbi:</b> {{animal.name}}</li>
+                    <li class="list-group-item active"><b>Sahibi:</b> {{animal.owner}}</li>
+                    <li class="list-group-item"><b>Ləqəbi:</b> {{animal.name|default:""}}</li>
                     <li class="list-group-item"><b>Növü:</b> {{animal.breed_name}}</li>
-                    <li class="list-group-item"><b>Yaşı:</b> {{animal.age}}</li>
-                    <li class="list-group-item"><b>Çəkisi</b> {{animal.weight}}</li>
+                    <li class="list-group-item"><b>Yaşı:</b> {{animal.age|default:""}}</li>
+                    <li class="list-group-item"><b>Çəkisi</b> {{animal.weight|default:""}}</li>
                     <li class="list-group-item"><b>Rəng:</b> {{animal.color_name}}</li>
-                    <li class="list-group-item"><b>Qəbul tarixi və saatı:</b> {{animal.entry_time|date:'H:i'}} {{animal.entry_time|date:'H:i'}}</li>
-                    <li class="list-group-item"><b>Telefon:</b> {{animal.phone}}</li>
-                    <li class="list-group-item"><b>Müayinə:</b> {{animal.examination}} ({{animal.examination.price}} AZN)</li>
-                    <li class="list-group-item"><b>Həkim:</b> {{animal.doctor}}</li>
+                    <li class="list-group-item"><b>Qəbul tarixi və saatı:</b> {{animal.entry_day}} {{animal.entry_time|date:'H:i'}}</li>
+                    <li class="list-group-item"><b>Telefon:</b> {{animal.phone|default:""}}</li>
+                    <li class="list-group-item"><b>Müayinə:</b> {{animal.examination|default:""}} ({{animal.examination.price|default:""}} AZN)</li>
+                    <li class="list-group-item"><b>Həkim:</b> {{animal.doctor|default:""}}</li>
+                    <li class="list-group-item"><b>Qeydlər:</b> {{animal.note|safe}}</li>
                 </ul>
 
                 <hr>

@@ -11,7 +11,7 @@
     <div class="card-body">
        <div class="container">
         <div class="row g-5">
-            <div class="col-12 col-md-10">
+            <div class="col-12">
                 
                 <form class="needs-validation" novalidate method="post">
                     {% csrf_token %}
@@ -102,9 +102,8 @@
                       </div>
 
                       <div class="col-12">
-                        <label for="id_note" class="form-label">Not</label>
+                        <label for="id_note" class="form-label">Qeydlər</label>
                         {{ form.note }}
-                        <small>Maksimum 255 hərf</small>
                         <div class="text-danger">
                             {{ form.note.errors }}
                         </div>

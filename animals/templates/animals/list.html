@@ -40,9 +40,9 @@
             <table class="table table-hover table-striped">
                 <thead class="bg-success text-light">
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">
-                        <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                    <th scope="col" class="align-middle">#</th>
+                    <th scope="col" class="align-middle">
+                        <span class="d-flex align-items-center justify-content-between">
                             <span>Sahibi</span>
                             <div class="d-flex flex-column">
                                 <span class="btn-order-by {% if request.GET.order_by == 'owner' and request.GET.order_dir == '1'%} text-dark {%endif%}" data-direction="1" data-order="owner"><i class="fas fa-chevron-up"></i></span> 
@@ -50,8 +50,8 @@
                             </div>
                         </span>
                     </th>
-                    <th scope="col">
-                        <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                    <th scope="col" class="align-middle">
+                        <span class="d-flex align-items-center justify-content-between">
                             <span>Ləqəbi</span> 
                             <div class="d-flex flex-column">
                                 <span class="btn-order-by {% if request.GET.order_by == 'name' and request.GET.order_dir == '1'%} text-dark {%endif%} " data-direction="1" data-order="name"><i class="fas fa-chevron-up"></i></span> 
@@ -59,12 +59,12 @@
                             </div>
                         </span>
                     </th>
-                    <th scope="col">Növü</th>
-                    <th scope="col">Yaşı</th>
-                    <th scope="col">Çəkisi</th>
-                    <th scope="col">Rəng </th>
-                    <th scope="col">
-                        <span class="w-100 h-100 d-flex align-items-center justify-content-between">
+                    <th scope="col" class="align-middle">Növü</th>
+                    <th scope="col" class="align-middle">Yaşı</th>
+                    <th scope="col" class="align-middle">Çəkisi</th>
+                    <th scope="col" class="align-middle">Rəng </th>
+                    <th scope="col" class="align-middle">
+                        <span class="d-flex align-items-center justify-content-between">
                             <span>Qəbul tarixi</span>
                             <div class="d-flex flex-column">
                                 <span class="btn-order-by {% if request.GET.order_by == 'entry_date' and request.GET.order_dir == '1'%} text-dark {%endif%}" data-direction="1" data-order="entry_date"><i class="fas fa-chevron-up"></i></span> 
@@ -72,12 +72,11 @@
                             </div>
                         </span>
                     </th>
-                    <th scope="col">Qəbul saatı</th>
-                    <th scope="col">Telefon</th>
-                    <th scope="col">Həkim</th>
-                    <th scope="col">Müayinə</th>
-                    <!-- <th scope="col">Qeyd</th> -->
-                    <th scope="col">Əməliyyatlar</th>
+                    <th scope="col" class="align-middle">Qəbul saatı</th>
+                    <th scope="col" class="align-middle">Telefon</th>
+                    <th scope="col" class="align-middle">Həkim</th>
+                    <th scope="col" class="align-middle">Müayinə</th>
+                    <th scope="col" class="align-middle">Əməliyyatlar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,15 +89,14 @@
                             <td>{{animal.owner}}</td>
                             <td>{{animal}}</td>
                             <td>{{animal.breed_name}}</td>
-                            <td>{{animal.age}}</td>
-                            <td>{{animal.weight}}</td>
+                            <td>{{animal.age|default:""}}</td>
+                            <td>{{animal.weight|default:""}}</td>
                             <td>{{animal.color_name}}</td>
                             <td>{{animal.entry_day|date:'d.m.Y'}}</td>
                             <td>{{animal.entry_time|date:'H:i'}}</td>
-                            <td>{{animal.phone}}</td>
-                            <td>{{animal.doctor}}</td>
-                            <td>{{animal.examination}} ({{animal.examination.price}} AZN)</td>
-                            <!-- <td>{{animal.note}}</td> -->
+                            <td>{{animal.phone|default:""}}</td>
+                            <td>{{animal.doctor|default:""}}</td>
+                            <td>{{animal.examination|default:""}} ({{animal.examination.price|default:""}} AZN)</td>
                             <td>
                                 <a class="btn bg-gradient btn-primary m-1" href="{% url 'animals:detail' animal.id %}">Ətraflı <i class="fas fa-file-alt"></i></a>
                                 <a class="btn bg-gradient btn-warning m-1" href="{% url 'animals:edit' animal.id %}">Dəyişiklik et <i class="fas fa-edit"></i></a>
@@ -110,20 +108,20 @@
             
                 <tfoot class="bg-success text-light">
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Sahibi</th>
-                        <th scope="col">Ləqəbi</th>
-                        <th scope="col">Növü</th>
-                        <th scope="col">Yaşı</th>
-                        <th scope="col">Çəkisi</th>
-                        <th scope="col">Rəng</th>
-                        <th scope="col">Qəbul tarixi</th>
-                        <th scope="col">Qəbul saatı</th>
-                        <th scope="col">Telefon</th>
-                        <th scope="col">Həkim</th>
-                        <th scope="col">Müayinə</th>
-                        <!-- <th scope="col">Qeyd</th> -->
-                        <th scope="col">Əməliyyatlar</th>
+                        <th scope="col" class="align-middle">#</th>
+                        <th scope="col" class="align-middle">Sahibi</th>
+                        <th scope="col" class="align-middle">Ləqəbi</th>
+                        <th scope="col" class="align-middle">Növü</th>
+                        <th scope="col" class="align-middle">Yaşı</th>
+                        <th scope="col" class="align-middle">Çəkisi</th>
+                        <th scope="col" class="align-middle">Rəng</th>
+                        <th scope="col" class="align-middle">Qəbul tarixi</th>
+                        <th scope="col" class="align-middle">Qəbul saatı</th>
+                        <th scope="col" class="align-middle">Telefon</th>
+                        <th scope="col" class="align-middle">Həkim</th>
+                        <th scope="col" class="align-middle">Müayinə</th>
+                        <!-- <th scope="col" class="align-middle">Qeyd</th> -->
+                        <th scope="col" class="align-middle">Əməliyyatlar</th>
                     </tr>
                 </tfoot>
             </table>

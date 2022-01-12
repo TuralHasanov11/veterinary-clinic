@@ -1,8 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator 
-from accounts.models import Account
-import datetime
-from datetime import datetime
+
 
 class Doctor(models.Model):
     name = models.CharField(max_length=191, null=False, blank=True, unique=True)
@@ -32,25 +30,25 @@ class MedicalExamination(models.Model):
 
 class Animal(models.Model):
 
-    name = models.CharField(max_length=191, null=False, blank=True)
+    name = models.CharField(max_length=191, null=True, default='', blank=True)
     owner = models.CharField(max_length=191, null=False, blank=True)
-    breed = models.PositiveIntegerField(null=False,blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    weight = models.FloatField(null=False, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    color = models.IntegerField(null=True,blank=True)
-    entry_date = models.DateTimeField(null=False, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    note = models.TextField(null=True, blank=True)
+    breed = models.PositiveIntegerField(null=True, default='',blank=True)
+    age = models.PositiveIntegerField(null=True, default='', blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    weight = models.FloatField(null=True, default='', blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    color = models.IntegerField(null=True, default='',blank=True)
+    entry_date = models.DateTimeField(null=True, default='', blank=True)
+    phone = models.CharField(max_length=20, default='', null=True, blank=True)
+    note = models.TextField(null=True, default='', blank=True)
 
-    examination = models.ForeignKey(MedicalExamination, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    examination = models.ForeignKey(MedicalExamination, on_delete=models.SET_NULL,blank=True, null=True,default='')
+    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL,blank=True, null=True,default='')
    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     COLORS = [('', 'Rəngi seçin'), (1, 'Ağ'), (2, 'Qara'), (3, 'Sarı'), (4, 'Boz'), (5, 'Qarışıq'), (6, 'Digər')]
     BREEDS = [('', 'Növü seçin'), (1, 'İt'), (2, 'Pişik'), (3, 'Dovşan'), (4, 'Tutuquşu'), (5, 'Hamster'), (6, 'Digər')]
-    ANIMALS_PER_PAGE = 20
+    ANIMALS_PER_PAGE = 25
     ANIMALS_ORDER_BY = ('name','owner','entry_date', 'created_at')
 
     def __str__(self):
@@ -72,25 +70,31 @@ class Animal(models.Model):
     
     @property
     def entry_day(self):
-        return self.entry_date.date()
+        if self.entry_date:
+            return self.entry_date.date()
+        return ''
     
     @property
     def entry_time(self):
-        return self.entry_date.time()
+        if self.entry_date:
+            return self.entry_date.time()
+        return ''
 
 
 class Feed(models.Model):
     name = models.CharField(max_length=255, null=False, blank=True, unique=True)
-    quantity = models.IntegerField()
-    weight = models.FloatField()
+    quantity = models.IntegerField(null=False, default=0,blank=True)
+    weight = models.FloatField(null=False, default=0,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    FEEDS_PER_PAGE=2
+    FEEDS_PER_PAGE=20
 
     def __str__(self):
         return self.name
     
     @property
     def total_weight(self):
-        return round(self.weight*self.quantity,2)
+        if self.quantity and self.weight:
+            return round(self.weight*self.quantity,2)
+        return 0

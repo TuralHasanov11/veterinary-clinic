@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, PermissionsMixin
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -75,11 +75,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return None
 
 
-def preSaveBlogAccountReceiver(sender, instance, **kwargs):
+def postSaveAccountReceiver(sender, instance, **kwargs):
     adminGroup = Group.objects.filter(name='admin')[0]
     if instance.is_admin:
         instance.groups.set([adminGroup])
     else:
         instance.groups.remove(adminGroup)
 
-pre_save.connect(preSaveBlogAccountReceiver, sender=Account)
+post_save.connect(postSaveAccountReceiver, sender=Account)

@@ -4,14 +4,15 @@ from django.contrib.auth import login, authenticate, logout
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
-from django.db.models import Q
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib import messages
 import datetime
+from django.utils.translation import activate
+activate('az')
 
 from .forms import RegistrationForm, LoginForm, ProfileUpdateForm
 from .models import Account
 from .decorators import isAdmin, noAuth
+
 
 @require_http_methods(["GET", "POST"])
 @noAuth()
@@ -70,10 +71,10 @@ def create(request):
     if request.POST:
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+            
+            user = form.save()
 
-            staffGroup = Group.objects.filter(name='staff')[0]
+            staffGroup = Group.objects.get(name='staff')
             user.groups.set([staffGroup])
 
             messages.success(request, 'İşçi əlavə edildi!')

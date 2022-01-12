@@ -75,12 +75,12 @@ async function fetchData(url = '', method='GET', data={}) {
             method: method,
             headers: {
               'Content-Type': 'application/json',
-              "X-CSRFToken": csrftoken
+              "X-CSRFToken": csrftoken,
             },
             credentials: "same-origin",
             body: JSON.stringify(data),
           });
-
+        
         if(!response.ok) {
           
           return response.json().then(error => { 

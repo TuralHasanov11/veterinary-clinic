@@ -7,6 +7,7 @@
 <h1 class="mt-4">Dərman Şirkətləri</h1>
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'medicines:medicines' %}">Dərmanlar</a></li>
     <li class="breadcrumb-item active">Dərman Şirkətləri</li>
 </ol>
 
@@ -134,8 +135,8 @@
                   <h5 class="modal-title" id="companyDeleteModalLabel">Dərman Şirkətini sil</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p>Dərman Şirkətini silmək istədiyinizə əminsinizmi?</p>
+                <div class="modal-body" v-if="selectedCompany">
+                    <p> <span v-html="selectedCompany.name"></span> Şirkətini silmək istədiyinizə əminsinizmi?</p>
                     <form v-if="selectedCompany" @submit.prevent="deleteCompany">
                         <button type="submit" class="btn btn-danger" :disabled="loading"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
                     </form>
