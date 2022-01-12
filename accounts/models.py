@@ -40,7 +40,7 @@ class AuthManager(BaseUserManager):
 class Account(AbstractBaseUser, PermissionsMixin):
     
     email = models.EmailField(verbose_name='email', unique=True, blank=True, null=True)
-    username= models.CharField(max_length=30, unique=True)
+    username= models.CharField(max_length=50, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(blank=True, null=True)
@@ -48,9 +48,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-    first_name= models.CharField(max_length=30, blank=True, null=True)
-    last_name= models.CharField(max_length=30, blank=True, null=True)
-    phone = models.CharField(max_length=30, blank=True, null=True)
+    first_name= models.CharField(max_length=50, blank=True, null=True)
+    last_name= models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=50, blank=True, null=True)
 
     objects = AuthManager()
 
