@@ -13,7 +13,7 @@ def main():
     # else:
     #     print('No .env found')
     # dotenv.read_dotenv()
-    # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'veterinary.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'veterinary.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
