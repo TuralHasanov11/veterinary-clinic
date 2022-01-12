@@ -7,13 +7,6 @@ from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-from io import BytesIO
-from django.template.loader import get_template
-from django.views.generic import View
-from datetime import date, timedelta
-from io import BytesIO
-from django.http import HttpResponse
-from xhtml2pdf import pisa
 
 
 from rest_framework import status
@@ -162,30 +155,6 @@ def getAnimalQuerySet(query=None, company=None):
     queryset = queryset.distinct()
 
     return queryset
-
-
-
-class ViewPDF(View):
-    def get(self, request, *args, **kwargs):
-
-        template_path = 'pdf/animals.html'
-        context = {'animals': Animal.objects.defer('note').order_by('-entry_date')}
-        response = HttpResponse(content_type='application/pdf')
-       
-        # if download
-        # response['Content-Disposition'] = 'attachment; filename="Hesabat.pdf"'
-
-        # if view
-        response['Content-Disposition'] = 'filename="Hesabat.pdf"'
-        template = get_template(template_path)
-        html = template.render(context)
-
-        pisa_status = pisa.CreatePDF(html, dest=response)
-        # return render(request, 'pdf/animals.html', context)
-        if pisa_status.err:
-            return HttpResponse('We had some errors <pre>' + html + '</pre>')
-        return response
-
 
 
 # DOCTORS

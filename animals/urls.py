@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (index, create, edit, delete, ViewPDF, detail,
+from .views import (index, create, edit, delete, detail,
                     doctors, DoctorList, doctorCreate, doctorEdit, doctorDelete, 
                     examinations, ExaminationList, examinationCreate, examinationEdit, examinationDelete, 
                     FeedList, feedCreate, feedDelete, feedEdit, feeds,)
@@ -9,7 +9,6 @@ app_name='animals'
 urlpatterns = [
     path('', index, name='list'),
     path('create/', create, name='create'),
-    path('monthly-report/', ViewPDF.as_view(), name='monthly_report'),
 
     path('doctors/', doctors, name='doctors'),
     path('doctors/list', DoctorList.as_view(), name='doctor_list'),

@@ -1,12 +1,13 @@
 from pathlib import Path
 from django.contrib.messages import constants as messages
 import os
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", 'i$axbdrsj8)9fiyp*c75w_=45ifk=c7f$ks7x+ak^ls)5v4um8')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get('DEBUG')) == "1" 
@@ -136,14 +137,10 @@ LOGIN_URL='/login/'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'media'
 ]
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
 STATIC_ROOT = BASE_DIR / 'static_cdn'
-MEDIA_ROOT = BASE_DIR / 'media_cdn'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -158,3 +155,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
  }
+
+django_heroku.settings(locals())
