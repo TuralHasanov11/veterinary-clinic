@@ -37,7 +37,7 @@ class Animal(models.Model):
     weight = models.FloatField(null=True, default='', blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     color = models.IntegerField(null=True, default='',blank=True)
     entry_date = models.DateTimeField(null=True, default='', blank=True)
-    phone = models.CharField(max_length=20, default='', null=True, blank=True)
+    phone = models.CharField(max_length=50, default='', null=True, blank=True)
     note = models.TextField(null=True, default='', blank=True)
 
     examination = models.ForeignKey(MedicalExamination, on_delete=models.SET_NULL,blank=True, null=True,default='')
