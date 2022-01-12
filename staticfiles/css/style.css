@@ -1,0 +1,51 @@
+.logout-btn:hover {
+  background: white !important;
+}
+
+/* LOGIN */
+.login-section {
+  display: flex;
+  align-items: center;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Ordering */
+.btn-order-by {
+  cursor: pointer;
+  font-size: 0.6rem;
+}
+
+/* Feature */
+.feature-icon {
+  font-size: 4rem;
+  text-align: center;
+}
