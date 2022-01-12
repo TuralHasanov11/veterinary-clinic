@@ -15,5 +15,4 @@ urlpatterns = [
     path('animals/', include('animals.urls')),
     path('inventory/', include('inventory.urls')),
 
-    
 ]
