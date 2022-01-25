@@ -23,11 +23,7 @@ ALLOWED_HOSTS = ['az-beti-veterinary-clinic.herokuapp.com','127.0.0.1']
 
 INSTALLED_APPS = [
 
-    'base',
-    'accounts',
-    'medicines',
-    'animals',
-    'inventory',
+   
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,6 +31,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'base',
+    'accounts',
+    'medicines',
+    'animals',
+    'inventory',
 
     'rest_framework',
     'django_filters',
@@ -85,9 +87,9 @@ DATABASES = {
 }
 
 
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=600)
+# DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
