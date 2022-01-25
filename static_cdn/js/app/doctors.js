@@ -4,7 +4,7 @@ let doctorsApp = new Vue({
     data: {
         url:'/animals/doctors/list',
 
-        doctors:null,
+        doctors:[],
 
         loading:false,
 

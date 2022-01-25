@@ -4,7 +4,7 @@ let examinationsApp = new Vue({
     data: {
         url:'/animals/examinations/list',
 
-        examinations:null,
+        examinations:[],
 
         loading:false,
 
