@@ -202,11 +202,11 @@
                             </div>
                         </div>
       
-                      <button class="btn btn-success" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                      <button class="btn btn-success bg-gradient" :disabled="loading" type="submit"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                  <button type="button" class="btn btn-secondary bg-gradient" data-bs-dismiss="modal">Bağla</button>
                 </div>
               </div>
             </div>
@@ -223,7 +223,7 @@
                 <div class="modal-body">
                     <p>Dərmanı silmək istədiyinizə əminsinizmi?</p>
                     <form id="feedDeleteForm" @submit.prevent="deleteFeed" v-if="selectedFeed">
-                        <button type="submit" class="btn btn-danger" :disabled="loading"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
+                        <button type="submit" class="btn btn-danger bg-gradient" :disabled="loading"><span v-if="loading" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Təsdiq et</button>
                     </form>
                 </div>
                 <div class="modal-footer">

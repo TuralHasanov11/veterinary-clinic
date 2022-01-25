@@ -21,10 +21,11 @@
                     <li class="list-group-item"><b>Yaşı:</b> {{animal.age|default:""}}</li>
                     <li class="list-group-item"><b>Çəkisi</b> {{animal.weight|default:""}}</li>
                     <li class="list-group-item"><b>Rəng:</b> {{animal.color_name}}</li>
-                    <li class="list-group-item"><b>Qəbul tarixi və saatı:</b> {{animal.entry_day}} {{animal.entry_time|date:'H:i'}}</li>
+                    <li class="list-group-item"><b>Qəbul tarixi və saatı:</b> {{animal.entry_day|date:'d.m.Y'}} {{animal.entry_time|date:'H:i'}}</li>
                     <li class="list-group-item"><b>Telefon:</b> {{animal.phone|default:""}}</li>
                     <li class="list-group-item"><b>Müayinə:</b> {{animal.examination|default:""}} ({{animal.examination.price|default:""}} AZN)</li>
                     <li class="list-group-item"><b>Həkim:</b> {{animal.doctor|default:""}}</li>
+                    <li class="list-group-item"><b>Qiymət:</b> {{animal.price}} AZN</li>
                     <li class="list-group-item"><b>Qeydlər:</b> {{animal.note|safe}}</li>
                 </ul>
 

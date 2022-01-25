@@ -1,19 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, PermissionsMixin
-from django.db.models.signals import post_save, pre_save
-from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 
 class AuthManager(BaseUserManager):
     
-    def create_user(self, email, username, password=None):
+    def create_user(self, username, password=None):
         
         if not username:
             raise ValueError("Username is required")
 
         user = self.model(
-            email=self.normalize_email(email),
             username = username,
         )
 
@@ -22,9 +20,8 @@ class AuthManager(BaseUserManager):
 
         return user
     
-    def create_superuser(self, email, username, password, first_name, last_name):
+    def create_superuser(self, username, password):
         user = self.create_user(
-            email=self.normalize_email(email),
             username = username,
             password = password
         )
@@ -40,7 +37,7 @@ class AuthManager(BaseUserManager):
 class Account(AbstractBaseUser, PermissionsMixin):
     
     email = models.EmailField(verbose_name='email', unique=True, blank=True, null=True)
-    username= models.CharField(max_length=2, unique=True)
+    username= models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(blank=True, null=True)
@@ -48,9 +45,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-    first_name= models.CharField(max_length=2, blank=True, null=True)
-    last_name= models.CharField(max_length=2, blank=True, null=True)
-    phone = models.CharField(max_length=2, blank=True, null=True)
+    first_name= models.CharField(max_length=255, blank=True, null=True)
+    last_name= models.CharField(max_length=255, blank=True, null=True)
 
     objects = AuthManager()
 
@@ -76,10 +72,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 
 def postSaveAccountReceiver(sender, instance, **kwargs):
-    adminGroup = Group.objects.filter(name='admin')[0]
-    if instance.is_admin:
-        instance.groups.set([adminGroup])
-    else:
-        instance.groups.remove(adminGroup)
+    adminGroup = Group.objects.filter(name='admin').first()
+    if adminGroup is not None:
+        if not instance.is_admin:
+            instance.groups.set([adminGroup])
+        else:
+            instance.groups.remove(adminGroup)
 
 post_save.connect(postSaveAccountReceiver, sender=Account)

@@ -16,6 +16,7 @@ class CreateAnimalForm(forms.ModelForm):
     breed = forms.ChoiceField(choices=Animal.BREEDS, widget=forms.Select(attrs={'class':'form-select'}))
     color = forms.ChoiceField(choices=Animal.COLORS, widget=forms.Select(attrs={'class':'form-select'}))
     entry_date = forms.DateTimeField(required=False, widget = forms.TextInput(attrs={'class':'form-control', }), initial=date.today())
+    price = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Animal
@@ -33,6 +34,7 @@ class UpdateAnimalForm(forms.ModelForm):
     breed = forms.ChoiceField(choices=Animal.BREEDS, widget=forms.Select(attrs={'class':'form-select'}))
     color = forms.ChoiceField(choices=Animal.COLORS, widget=forms.Select(attrs={'class':'form-select'}))
     entry_date = forms.DateTimeField(required=False, widget = forms.TextInput(attrs={'class':'form-control', }))
+    price = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control'}))
     
     class Meta:
         model = Animal

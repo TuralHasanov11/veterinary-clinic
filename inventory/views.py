@@ -9,6 +9,9 @@ from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView  
 from rest_framework.filters import SearchFilter, OrderingFilter
 
+from django.utils.translation import activate
+activate('az')
+
 from .models import Equipment
 from .serializers import EquipmentSerializer
 from .pagination import EquipmentPagination

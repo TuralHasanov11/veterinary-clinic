@@ -10,16 +10,14 @@
             {% include 'snippets/form_errors.html' with errors=login_form.non_field_errors %}
             {% csrf_token %}
             <div class="form-floating">
-                {{ login_form.username.errors }}
                 {{ login_form.username }}
-                <!-- <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"> -->
                 <label for="email">İstifadəçi adı:</label>
+                <div class="text-danger">{{ login_form.username.errors }}</div>
               </div>
             <div class="form-floating">
-                {{ login_form.password.errors }}
                 {{ login_form.password }}
-                <!-- <input type="password" class="form-control" id="floatingPassword" placeholder="Password"> -->
                 <label for="password">Şifrə:</label>
+                <div class="text-danger">{{ login_form.password.errors }}</div>
             </div>
     
             <button class="w-100 btn btn-lg btn-primary" type="submit">Daxil ol</button>

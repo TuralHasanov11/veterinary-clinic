@@ -4,10 +4,10 @@
 {% block content %}
 
 <div id="examinationsApp">
-<h1 class="mt-4">Müayinələr</h1>
+<h1 class="mt-4">Müayinələr və müalicələr</h1>
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item"><a href="{% url 'base:index' %}">Əsas səhifə</a></li>
-    <li class="breadcrumb-item active">Müayinələr</li>
+    <li class="breadcrumb-item active">Müayinələr və müalicələr</li>
 </ol>
 
 <div class="card mb-4">
@@ -28,7 +28,7 @@
 
         
         <div class="card card-body my-4">
-            <h3>Müayinə əlavə et</h3>
+            <h3>Müayinə yaxud müalicə əlavə et</h3>
 
             <form @submit.prevent="createExamination">
                 <div class="mb-3 row">
@@ -73,7 +73,7 @@
 
         
         <div class="list my-3">
-            <h3>Müayinələrin siyahısı</h3>
+            <h3>Müayinələr və müalicələrin siyahısı</h3>
 
             <div class="table-responsive rounded my-4">
                 <table class="table table-hover table-striped">
@@ -81,7 +81,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Adı</th>
-                            <th scope="col">Qiyməti</th>
+                            <th scope="col">Qiyməti (AZN)</th>
                             <th scope="col">Əməliyyatlar</th>
                         </tr>
                     </thead>

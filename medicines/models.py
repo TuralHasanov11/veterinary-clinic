@@ -21,7 +21,7 @@ class Medicine(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     MEDICINES_PER_PAGE = 25
-    MEDICINES_ORDER_BY = ('name','quantity','price','our_price','total_price')
+    MEDICINES_ORDER_BY = ('name',)
 
     def __str__(self):
         return self.name

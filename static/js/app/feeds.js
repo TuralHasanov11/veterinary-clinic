@@ -6,7 +6,7 @@ let feedsApp = new Vue({
     data: {
         url:'/animals/feeds/list?page=1',
 
-        feeds:null,
+        feeds:[],
         feedsCount:null,
         
         perPage:null,

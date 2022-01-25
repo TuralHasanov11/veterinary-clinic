@@ -1,7 +1,6 @@
 from pathlib import Path
 from django.contrib.messages import constants as messages
 import os
-import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,11 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'i$axbdrsj8)9fiyp*c75w_=45ifk=c7f$ks7x+ak^ls)5v4um8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = str(os.environ.get('DEBUG')) == "1" 
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-ALLOWED_HOSTS = 'az-beti-veterinary-clinic.herokuapp.com'
+ALLOWED_HOSTS = ['az-beti-veterinary-clinic.herokuapp.com','127.0.0.1']
 
 # if not DEBUG:
 #     ALLOWED_HOSTS += [os.environ.get('ALLOWED_HOSTS')]
@@ -23,18 +22,19 @@ ALLOWED_HOSTS = 'az-beti-veterinary-clinic.herokuapp.com'
 # Application definition
 
 INSTALLED_APPS = [
+
+    'base',
+    'accounts',
+    'medicines',
+    'animals',
+    'inventory',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'accounts',
-    'base',
-    'medicines',
-    'animals',
-    'inventory',
 
     'rest_framework',
     'django_filters',
@@ -84,6 +84,10 @@ DATABASES = {
     }
 }
 
+
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -158,5 +162,3 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
  }
-
-django_heroku.settings(locals())

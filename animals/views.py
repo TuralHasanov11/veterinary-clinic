@@ -8,6 +8,8 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 
+from django.utils.translation import activate
+activate('az')
 
 from rest_framework import status
 from rest_framework.response import Response

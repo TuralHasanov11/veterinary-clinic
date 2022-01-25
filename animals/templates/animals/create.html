@@ -101,6 +101,14 @@
                         </div>
                       </div>
 
+                      <div class="col-md-4">
+                        <label for="id_price" class="form-label">Ümumi ödəniş</label>
+                        {{ form.price }}
+                        <div class="text-danger">
+                            {{ form.price.errors }}
+                        </div>
+                      </div>
+
                       <div class="col-12">
                         <label for="id_note" class="form-label">Qeydlər</label>
                         {{ form.note }}

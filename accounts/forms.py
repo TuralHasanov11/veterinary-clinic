@@ -70,14 +70,14 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def clean_old_password(self):
         old_password = self.cleaned_data.get("old_password", "")
-        if old_password and self.instance.check_password(old_password):
+        if (not old_password) or self.instance.check_password(old_password):
             return old_password
         raise ValidationError("Köhnə şifrə düzgün deyil!")
 
     def clean_new_password2(self):
         new_password1 = self.cleaned_data.get("new_password1",'')
         new_password2 = self.cleaned_data.get("new_password2",'')
-        if new_password1 and new_password2 and new_password1 == new_password2:    
+        if not (new_password1 and new_password2) or new_password1 == new_password2:    
             return new_password2
         raise ValidationError("Yeni şifrə və Şifrə təsdiqi uyğun deyil!")
 

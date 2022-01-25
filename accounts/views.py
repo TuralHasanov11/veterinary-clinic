@@ -1,3 +1,4 @@
+from curses.ascii import HT
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import login, authenticate, logout
@@ -11,12 +12,12 @@ activate('az')
 
 from .forms import RegistrationForm, LoginForm, ProfileUpdateForm
 from .models import Account
-from .decorators import isAdmin, noAuth
-
 
 @require_http_methods(["GET", "POST"])
-@noAuth()
 def signin(request):
+
+    if request.user.is_authenticated:
+        return redirect('base:index')
 
     if request.method == 'POST':
 
@@ -24,12 +25,14 @@ def signin(request):
        
         if form.is_valid():
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-
+            
             if user is not None:
+                
                 login(request, user)
+                
                 user.last_login = datetime.datetime.now()
                 user.save()
-                
+
                 if request.GET.get('next', None):
                     return redirect(request.GET.get('next', None))
 
@@ -108,7 +111,6 @@ def edit(request, id):
             "username":account.username,
             'first_name':account.first_name,
             'last_name':account.last_name,
-            'phone':account.phone
         })
 
     return render(request, 'accounts/edit.html', context={

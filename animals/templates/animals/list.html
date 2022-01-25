@@ -30,12 +30,6 @@
             </div>
         </form>
 
-        <!-- <div class="card mb-3" style="max-width: 18rem;">
-            <div class="card-body text-primary">
-                <a class="btn btn-warning" href="{% url 'animals:monthly_report' %}">Aylıq hesabat</a>
-            </div>
-        </div> -->
-
         <div class="table-responsive rounded">
             <table class="table table-hover table-striped">
                 <thead class="bg-success text-light">
@@ -76,6 +70,7 @@
                     <th scope="col" class="align-middle">Telefon</th>
                     <th scope="col" class="align-middle">Həkim</th>
                     <th scope="col" class="align-middle">Müayinə</th>
+                    <th scope="col" class="align-middle">Qiymət</th>
                     <th scope="col" class="align-middle">Əməliyyatlar</th>
                 </tr>
                 </thead>
@@ -97,6 +92,7 @@
                             <td>{{animal.phone|default:""}}</td>
                             <td>{{animal.doctor|default:""}}</td>
                             <td>{{animal.examination|default:""}} ({{animal.examination.price|default:""}} AZN)</td>
+                            <td>{{animal.price}}</td>
                             <td>
                                 <a class="btn bg-gradient btn-primary m-1" href="{% url 'animals:detail' animal.id %}">Ətraflı <i class="fas fa-file-alt"></i></a>
                                 <a class="btn bg-gradient btn-warning m-1" href="{% url 'animals:edit' animal.id %}">Dəyişiklik et <i class="fas fa-edit"></i></a>
@@ -120,7 +116,7 @@
                         <th scope="col" class="align-middle">Telefon</th>
                         <th scope="col" class="align-middle">Həkim</th>
                         <th scope="col" class="align-middle">Müayinə</th>
-                        <!-- <th scope="col" class="align-middle">Qeyd</th> -->
+                        <th scope="col" class="align-middle">Qiymət</th>
                         <th scope="col" class="align-middle">Əməliyyatlar</th>
                     </tr>
                 </tfoot>

@@ -13,7 +13,7 @@ let inventoryApp = new Vue({
     data: {
         url:'/inventory/equipment/list?page=1',
 
-        equipment:null,
+        equipment:[],
         equipmentCount:null,
         
         perPage:null,

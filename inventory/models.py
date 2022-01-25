@@ -8,8 +8,8 @@ class Equipment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    EQUIPMENT_PER_PAGE = 2
-    EQUIPMENT_ORDER_BY = ('name','quantity','price')
+    EQUIPMENT_PER_PAGE = 25
+    EQUIPMENT_ORDER_BY = ('name',)
     
     def __str__(self):
         return self.name
