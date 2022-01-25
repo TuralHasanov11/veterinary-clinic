@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'medicines',
     'animals',
     'inventory',
-    
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

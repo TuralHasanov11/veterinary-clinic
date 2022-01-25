@@ -36,7 +36,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('email', 'password', 'is_active', 'is_admin',)
+        fields = ('password', 'is_active', 'is_admin',)
 
 
 class UserAdmin(BaseUserAdmin):
@@ -45,11 +45,11 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserCreationForm
 
     # The fields to be used in displaying the User model.
-    list_display = ('username','email', 'is_staff','is_admin', 'last_login','updated_at','is_active')
+    list_display = ('username', 'is_staff','is_admin', 'last_login','updated_at','is_active')
     readonly_fields = ('created_at', 'updated_at', 'last_login')
     list_filter = ('is_admin','is_active')
     fieldsets = (
-        (None, {'fields': ('username','email',)}),
+        (None, {'fields': ('username',)}),
         ('Personal info', {'fields': ('first_name','last_name')}),
         ('Permissions', {'fields': ('is_admin','is_active','is_staff')}),
     )
@@ -57,11 +57,11 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username','email', 'password1', 'password2'),
+            'fields': ('username', 'password1', 'password2'),
         }),
     )
-    search_fields = ('username','email',)
-    ordering = ('username','email','last_login')
+    search_fields = ('username',)
+    ordering = ('username','last_login')
     filter_horizontal = ()
 
 

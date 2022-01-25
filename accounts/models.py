@@ -36,7 +36,6 @@ class AuthManager(BaseUserManager):
 
 class Account(AbstractBaseUser, PermissionsMixin):
     
-    email = models.EmailField(verbose_name='email', unique=True, blank=True, null=True)
     username= models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
